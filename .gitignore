@@ -1,0 +1,45 @@
+# WordPress
+wp-config.php
+wp-content/
+wp-includes/
+/index.php
+/wp-*.php
+/xmlrpc.php
+/wp-admin/
+/wp-json/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS
+.DS_Store
+Thumbs.db
+*.log
+
+# Dependencies
+node_modules/
+vendor/
+composer.lock
+
+# Build
+/dist/
+/build/
+
+# Temporary files
+*.tmp
+*.swp
+*.swo
+*~
+.cache/
+
+# Error logs
+error_log
+debug.log
