@@ -50,13 +50,18 @@ function gf_render_final_logic( $atts ) {
         .os-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 20px; cursor: pointer; transition: 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: center; aspect-ratio: 1.3/1; }
         .os-card:hover { background: rgba(99, 102, 241, 0.2); border-color: #818cf8; transform: translateY(-5px); }
         .os-card i { font-size: 26px; margin-bottom: 10px; color: #cbd5e1; }
-        /* SLIDER DOBLE */
+        /* SLIDER DOBLE - CORREGIDO */
         .range-wrapper { width: 100%; padding: 0 10px; box-sizing: border-box; position: relative; height: 50px; margin-bottom: 20px; }
-        .slider-track { position: absolute; top: 50%; transform: translateY(-50%); height: 6px; width: 100%; background: #334155; border-radius: 5px; z-index: 1; }
-        .slider-fill { position: absolute; height: 6px; top: 50%; transform: translateY(-50%); background: #818cf8; z-index: 2; border-radius: 5px; }
-        .range-input { position: absolute; width: 100%; top: 50%; transform: translateY(-50%); pointer-events: none; -webkit-appearance: none; background: none; z-index: 3; margin: 0; }
-        .range-input::-webkit-slider-thumb { -webkit-appearance: none; pointer-events: all; width: 24px; height: 24px; border-radius: 50%; background: white; cursor: pointer; box-shadow: 0 0 10px rgba(0,0,0,0.5); border: 2px solid #818cf8; }
-        .price-labels { display: flex; justify-content: space-between; font-weight: 700; color: #818cf8; font-size: 18px; margin-top: -10px;}
+        .slider-track { position: absolute; top: 50%; transform: translateY(-50%); height: 8px; width: 100%; background: #334155; border-radius: 5px; z-index: 1; }
+        .slider-fill { position: absolute; height: 8px; top: 50%; transform: translateY(-50%); background: linear-gradient(90deg, #6366f1, #818cf8); z-index: 2; border-radius: 5px; pointer-events: none; }
+        .range-input { position: absolute; width: 100%; top: 50%; transform: translateY(-50%); -webkit-appearance: none; appearance: none; background: transparent; z-index: 5; margin: 0; height: 8px; pointer-events: none; }
+        .range-input::-webkit-slider-runnable-track { width: 100%; height: 8px; background: transparent; border: none; }
+        .range-input::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; pointer-events: all; width: 28px; height: 28px; border-radius: 50%; background: white; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.3); border: 3px solid #818cf8; margin-top: -10px; position: relative; z-index: 10; }
+        .range-input::-moz-range-track { width: 100%; height: 8px; background: transparent; border: none; }
+        .range-input::-moz-range-thumb { pointer-events: all; width: 24px; height: 24px; border-radius: 50%; background: white; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.3); border: 3px solid #818cf8; }
+        #range-min { z-index: 5; }
+        #range-max { z-index: 6; }
+        .price-labels { display: flex; justify-content: space-between; font-weight: 700; color: #818cf8; font-size: 20px; margin-bottom: 10px; }
         /* TIEMPO */
         .time-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; width: 100%; }
         .time-opt { background: transparent; border: 2px solid rgba(255,255,255,0.1); color: #94a3b8; padding: 12px 5px; border-radius: 12px; cursor: pointer; font-size: 12px; font-weight: 600; display: flex; flex-direction: column; align-items: center; gap: 6px; transition: 0.2s; }
@@ -155,22 +160,50 @@ function gf_render_final_logic( $atts ) {
         });
 
         let state = { rec: '', minP: 10, maxP: 150, time: '', vibe: '', step: 1 };
+        
         function slideMin() {
-            let minRange = document.getElementById("range-min"); let maxRange = document.getElementById("range-max");
-            let minVal = parseInt(minRange.value); let maxVal = parseInt(maxRange.value);
-            if(maxVal - minVal < 10) { minRange.value = maxVal - 10; minVal = minRange.value; }
-            state.minP = minVal; document.getElementById("lbl-min").innerText = minVal + "€"; updateFill();
+            let minRange = document.getElementById("range-min"); 
+            let maxRange = document.getElementById("range-max");
+            let minVal = parseInt(minRange.value); 
+            let maxVal = parseInt(maxRange.value);
+            
+            // Evitar que se crucen los sliders
+            if(minVal >= maxVal - 10) { 
+                minVal = maxVal - 10;
+                minRange.value = minVal; 
+            }
+            
+            state.minP = minVal; 
+            document.getElementById("lbl-min").innerText = minVal + "€"; 
+            updateFill();
         }
+        
         function slideMax() {
-            let minRange = document.getElementById("range-min"); let maxRange = document.getElementById("range-max");
-            let minVal = parseInt(minRange.value); let maxVal = parseInt(maxRange.value);
-            if(maxVal - minVal < 10) { maxRange.value = minVal + 10; maxVal = maxRange.value; }
-            state.maxP = maxVal; document.getElementById("lbl-max").innerText = (maxVal >= 300 ? "+300€" : maxVal + "€"); updateFill();
+            let minRange = document.getElementById("range-min"); 
+            let maxRange = document.getElementById("range-max");
+            let minVal = parseInt(minRange.value); 
+            let maxVal = parseInt(maxRange.value);
+            
+            // Evitar que se crucen los sliders
+            if(maxVal <= minVal + 10) { 
+                maxVal = minVal + 10;
+                maxRange.value = maxVal; 
+            }
+            
+            state.maxP = maxVal; 
+            document.getElementById("lbl-max").innerText = (maxVal >= 300 ? "+300€" : maxVal + "€"); 
+            updateFill();
         }
+        
         function updateFill() {
-            let minVal = document.getElementById("range-min").value; let maxVal = document.getElementById("range-max").value;
-            let range = 300; let fill = document.getElementById("fill-bar");
-            fill.style.left = (minVal / range) * 100 + "%"; fill.style.width = ((maxVal - minVal) / range) * 100 + "%";
+            let minVal = parseInt(document.getElementById("range-min").value); 
+            let maxVal = parseInt(document.getElementById("range-max").value);
+            let range = 300; 
+            let fill = document.getElementById("fill-bar");
+            let leftPercent = (minVal / range) * 100;
+            let widthPercent = ((maxVal - minVal) / range) * 100;
+            fill.style.left = leftPercent + "%"; 
+            fill.style.width = widthPercent + "%";
         }
         function setRec(val) { state.rec = val; move(1); }
         function setTime(val, el) {
@@ -200,58 +233,107 @@ function gf_render_final_logic( $atts ) {
     </script>
 
     <?php
-    // --- LÓGICA PHP: CASCADA DE RESCATE (Sincronizada con ingestor) ---
+    // --- LÓGICA PHP: BÚSQUEDA INTELIGENTE POR CRITERIOS ---
     if(isset($_GET['mode']) && $_GET['mode'] == 'feed') {
         
-        $rec_slug = sanitize_text_field($_GET['rec']);
-        $time_mode = sanitize_text_field($_GET['time']);
-        $vibe_slug = sanitize_text_field($_GET['vibe']);
-        $min_price = (int)$_GET['min'];
-        $max_price = (int)$_GET['max'];
+        $rec_slug = sanitize_text_field($_GET['rec'] ?? '');
+        $time_mode = sanitize_text_field($_GET['time'] ?? 'any');
+        $vibe_slug = sanitize_text_field($_GET['vibe'] ?? '');
+        $min_price = max(0, (int)($_GET['min'] ?? 0));
+        $max_price = (int)($_GET['max'] ?? 300);
         if($max_price >= 300) $max_price = 99999;
 
-        // MAPEO DE SLUGS A TAGS (¡Esto debe coincidir con api-ingest!)
-        $tags = [$vibe_slug];
-        if($vibe_slug == 'tech') $tags = ['Tech']; // En ingestor se guarda como 'Tech'
-        if($vibe_slug == 'cocina') $tags = ['Gourmet']; // En ingestor 'Gourmet'
-        if($vibe_slug == 'friki') $tags = ['Friki']; 
-        if($vibe_slug == 'fit') $tags = ['Deporte']; 
-        if($vibe_slug == 'zen') $tags = ['Zen']; 
-        if($vibe_slug == 'viajero') $tags = ['Viajes'];
+        // MAPEO DE SLUGS DEL FORM A TAGS DE BD
+        $vibe_mapping = [
+            'tech' => 'Tech',
+            'cocina' => 'Gourmet', 
+            'friki' => 'Friki',
+            'fit' => 'Deporte',
+            'zen' => 'Zen',
+            'viajero' => 'Viajes',
+            'fashion' => 'Moda'
+        ];
         
-        // --- FUNCIÓN DE BÚSQUEDA ---
-        function gf_search($args_override = []) {
-            $base_args = [ 'post_type' => 'gf_gift', 'posts_per_page' => 20, 'post_status' => ['publish', 'draft'] ];
+        // MAPEO DE RECIPIENT DEL FORM A TAGS DE BD
+        $recipient_mapping = [
+            'pareja' => ['Pareja', 'Novio', 'Novia'],
+            'familia' => ['Familia', 'Padre', 'Madre'],
+            'amigos' => ['Amigos'],
+            'peques' => ['Peques', 'Niños'],
+            'compromiso' => ['Pareja', 'Compromiso'],
+            'friki' => ['Amigos', 'Friki'] // Para mí
+        ];
+        
+        $vibe_tag = $vibe_mapping[$vibe_slug] ?? 'Friki';
+        $recipient_tags = $recipient_mapping[$rec_slug] ?? ['Amigos'];
+        
+        // --- FUNCIÓN DE BÚSQUEDA CON PRECIO ---
+        function gf_search_with_price($args_override = [], $min_p = 0, $max_p = 99999) {
+            global $wpdb;
+            
+            // Primero obtenemos los post_ids que tienen ofertas en el rango de precio
+            $table_offers = $wpdb->prefix . 'gf_affiliate_offers';
+            
+            $price_filtered_ids = $wpdb->get_col($wpdb->prepare(
+                "SELECT DISTINCT post_id FROM $table_offers WHERE price >= %f AND price <= %f AND is_active = 1",
+                $min_p, $max_p
+            ));
+            
+            if(empty($price_filtered_ids)) {
+                // Si no hay productos en ese rango, ampliar búsqueda
+                $price_filtered_ids = $wpdb->get_col("SELECT DISTINCT post_id FROM $table_offers WHERE is_active = 1 LIMIT 50");
+            }
+            
+            $base_args = [ 
+                'post_type' => 'gf_gift', 
+                'posts_per_page' => 30, 
+                'post_status' => 'publish',
+                'post__in' => $price_filtered_ids,
+                'orderby' => 'rand' // Variedad
+            ];
+            
             $args = array_merge($base_args, $args_override);
+            
+            // Eliminar post__in si viene vacío para evitar errores
+            if(empty($price_filtered_ids)) {
+                unset($args['post__in']);
+            }
+            
             return new WP_Query($args);
         }
 
-        // CASCADA DE INTENTOS
-        $q = null; $fallback_msg = "";
+        // CASCADA DE INTENTOS (de más específico a más general)
+        $q = null; 
+        $fallback_msg = "";
         
-        // NIVEL 1: EXACTO
-        $q = gf_search([
-            'tax_query' => [ 'relation' => 'AND',
-                ['taxonomy'=>'gf_interest','field'=>'name','terms'=>$tags,'operator'=>'IN'], // Usamos 'name' para coincidir con el tag exacto
-                ['taxonomy'=>'gf_recipient','field'=>'slug','terms'=>$rec_slug]
+        // NIVEL 1: VIBE + RECIPIENT + PRECIO
+        $q = gf_search_with_price([
+            'tax_query' => [ 
+                'relation' => 'AND',
+                ['taxonomy' => 'gf_interest', 'field' => 'name', 'terms' => [$vibe_tag], 'operator' => 'IN'],
+                ['taxonomy' => 'gf_recipient', 'field' => 'name', 'terms' => $recipient_tags, 'operator' => 'IN']
             ]
-        ]);
+        ], $min_price, $max_price);
 
-        // NIVEL 2: SOLO VIBE
+        // NIVEL 2: SOLO VIBE + PRECIO
         if(!$q->have_posts()) {
-            $q = gf_search([ 'tax_query' => [['taxonomy'=>'gf_interest','field'=>'name','terms'=>$tags,'operator'=>'IN']] ]);
-            $fallback_msg = "Sugerencias por Interés";
+            $q = gf_search_with_price([
+                'tax_query' => [
+                    ['taxonomy' => 'gf_interest', 'field' => 'name', 'terms' => [$vibe_tag], 'operator' => 'IN']
+                ]
+            ], $min_price, $max_price);
+            $fallback_msg = "Sugerencias " . $vibe_tag;
         }
 
-        // NIVEL 3: SOLO RECIPIENT
+        // NIVEL 3: SOLO PRECIO (sin filtros de taxonomía)
         if(!$q->have_posts()) {
-            $q = gf_search([ 'tax_query' => [['taxonomy'=>'gf_recipient','field'=>'slug','terms'=>$rec_slug]] ]);
-            $fallback_msg = "Populares para " . ucfirst($rec_slug);
+            $q = gf_search_with_price([], $min_price, $max_price);
+            $fallback_msg = "En tu presupuesto";
         }
 
         // NIVEL 4: TODO (Si todo falla)
         if(!$q->have_posts()) {
-            $q = gf_search(['orderby' => 'date', 'order' => 'DESC']);
+            $q = gf_search_with_price([], 0, 99999);
             $fallback_msg = "Novedades Destacadas";
         }
 
@@ -279,7 +361,7 @@ function gf_render_final_logic( $atts ) {
             } else { $chosen = $offers[0]; }
             if(!$chosen) continue;
 
-            if($fallback_msg == "" && ($chosen->price < $min_price || $chosen->price > $max_price)) continue;
+            // Ya no filtramos por precio aquí porque lo hicimos en la query SQL
 
             $count_shown++;
             $img = get_the_post_thumbnail_url(get_the_ID(),'full');
