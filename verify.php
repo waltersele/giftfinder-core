@@ -113,7 +113,7 @@ if ($wp_loaded) {
     // 6. Configuración
     echo "\n[6] Verificando configuración...\n";
     $config_vars = [
-        'WP_API_TOKEN' => function_exists('giftia_env') ? giftia_env('WP_API_TOKEN', '') : get_option('gf_ingest_secret_token', ''),
+        'WP_API_TOKEN' => function_exists('giftia_env') ? giftia_env('WP_API_TOKEN', '') : get_option('gf_wp_api_token', ''),
         'GEMINI_API_KEY' => function_exists('giftia_env') ? giftia_env('GEMINI_API_KEY', '') : '',
         'AMAZON_TAG' => function_exists('giftia_env') ? giftia_env('AMAZON_TAG', '') : '',
     ];

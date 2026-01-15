@@ -290,14 +290,14 @@ function gf_render_final_logic( $atts ) {
             elseif($time_mode=='fast') $badge='🚀 24H - 48H';
             ?>
             <div class="feed-item">
-                <img src="<?php echo $img; ?>" class="feed-bg">
+                <img src="<?php echo esc_url($img); ?>" class="feed-bg">
                 <div class="feed-info">
-                    <?php if($fallback_msg): ?><div class="fallback-notice"><i class="fa-solid fa-lightbulb"></i> <?php echo $fallback_msg; ?></div><?php endif; ?>
-                    <?php if($badge): ?><span style="background:#8b5cf6; padding:5px 10px; border-radius:5px; font-weight:bold; font-size:12px; margin-bottom:10px; display:inline-block;"><?php echo $badge; ?></span><?php endif; ?>
+                    <?php if($fallback_msg): ?><div class="fallback-notice"><i class="fa-solid fa-lightbulb"></i> <?php echo esc_html($fallback_msg); ?></div><?php endif; ?>
+                    <?php if($badge): ?><span style="background:#8b5cf6; padding:5px 10px; border-radius:5px; font-weight:bold; font-size:12px; margin-bottom:10px; display:inline-block;"><?php echo esc_html($badge); ?></span><?php endif; ?>
                     <div class="feed-title"><?php the_title(); ?></div>
-                    <div class="feed-price"><?php echo number_format($chosen->price,2); ?>€</div>
-                    <div style="font-size:12px; color:#cbd5e1; margin-bottom:20px;">Vendido por <?php echo ucfirst($chosen->vendor_name); ?></div>
-                    <a href="<?php echo $chosen->affiliate_url; ?>" target="_blank" class="feed-cta">COMPRAR AHORA</a>
+                    <div class="feed-price"><?php echo esc_html(number_format($chosen->price,2)); ?>€</div>
+                    <div style="font-size:12px; color:#cbd5e1; margin-bottom:20px;">Vendido por <?php echo esc_html(ucfirst($chosen->vendor_name)); ?></div>
+                    <a href="<?php echo esc_url($chosen->affiliate_url); ?>" target="_blank" rel="noopener noreferrer" class="feed-cta">COMPRAR AHORA</a>
                 </div>
             </div>
             <?php

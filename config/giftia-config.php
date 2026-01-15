@@ -260,7 +260,7 @@ function gf_get_config($key, $default = null) {
         case 'gemini_key':
             return get_option('gf_gemini_api_key') ?: getenv('GEMINI_API_KEY');
         case 'ingest_token':
-            return get_option('gf_ingest_secret_token') ?: getenv('WP_API_TOKEN');
+            return get_option('gf_wp_api_token') ?: getenv('WP_API_TOKEN');
         default:
             return $default;
     }

@@ -199,7 +199,7 @@ function gf_validate_cors($allowed_origins = []) {
 // ============================================================
 
 function gf_validate_token($incoming_token) {
-    $stored_token = get_option('gf_ingest_secret_token');
+    $stored_token = get_option('gf_wp_api_token');
     
     // Usar hash_equals para evitar timing attacks
     if(empty($stored_token) || !hash_equals($stored_token, $incoming_token)) {
@@ -255,8 +255,8 @@ function gf_search_products($args = []) {
     
     $final_args = array_merge($base_args, $args);
     
-    // Aplicar caché si es búsqueda estándar
-    $cache_key = 'gf_search_' . md5(json_encode($final_args));
+    // Aplicar caché si es búsqueda estándar - usar SHA256 en lugar de MD5
+    $cache_key = 'gf_search_' . hash('sha256', json_encode($final_args));
     $cached = get_transient($cache_key);
     
     if($cached !== false) {

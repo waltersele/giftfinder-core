@@ -210,7 +210,7 @@ function gf_render_settings_page() {
     $env_writable = is_writable( dirname( $env_file ) );
     
     // Cargar valores con fallback a wp_options
-    $wp_token = $env_vars['WP_API_TOKEN'] ?? get_option( 'gf_ingest_secret_token', '' );
+    $wp_token = $env_vars['WP_API_TOKEN'] ?? get_option( 'gf_wp_api_token', '' );
     $gemini_key = $env_vars['GEMINI_API_KEY'] ?? get_option( 'gf_gemini_api_key', '' );
     $amazon_tag = $env_vars['AMAZON_TAG'] ?? get_option( 'gf_amazon_tag', 'GIFTIA-21' );
     $allowed_origins = $env_vars['ALLOWED_ORIGINS'] ?? '[]';
@@ -408,9 +408,10 @@ echo esc_html( implode( "\n", $safe_vars ) );
 // Auto-generate token if missing
 function gf_ensure_token_exists() {
     $env_vars = gf_read_env_file();
-    if ( empty( $env_vars['WP_API_TOKEN'] ) && ! get_option( 'gf_ingest_secret_token' ) ) {
+    if ( empty( $env_vars['WP_API_TOKEN'] ) && ! get_option( 'gf_wp_api_token' ) ) {
         $token = bin2hex( random_bytes( 16 ) );
         gf_write_env_file( array( 'WP_API_TOKEN' => $token ) );
+        update_option( 'gf_wp_api_token', $token );
     }
 }
 add_action( 'admin_init', 'gf_ensure_token_exists' );

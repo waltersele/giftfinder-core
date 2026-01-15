@@ -93,7 +93,7 @@ $stored_token = giftia_env('WP_API_TOKEN', '');
 if (empty($stored_token)) {
     // Primera ejecución: generar y guardar token
     $stored_token = bin2hex(random_bytes(16));
-    update_option('gf_ingest_secret_token', $stored_token);
+    update_option('gf_wp_api_token', $stored_token);
     error_log('[GIFTIA-API] Token generado automáticamente: ' . substr($stored_token, 0, 10) . '...');
 }
 

@@ -154,7 +154,7 @@ foreach ($possible_paths as $path) {
                         <td>WP_API_TOKEN</td>
                         <td>
                             <?php
-                            $token = getenv('WP_API_TOKEN') ?: get_option('gf_ingest_secret_token');
+                            $token = getenv('WP_API_TOKEN') ?: get_option('gf_wp_api_token');
                             echo $token ? '✅ SET' : '❌ NOT SET';
                             ?>
                         </td>

@@ -6,6 +6,28 @@
 
 header('Content-Type: text/html; charset=UTF-8');
 
+// Cargar WordPress para obtener home_url()
+$wp_loaded = false;
+$possible_paths = [
+    dirname(__FILE__) . '/../../../../wp-load.php',
+    dirname(__FILE__) . '/../../../wp-load.php',
+    dirname(__FILE__) . '/../../wp-load.php',
+    $_SERVER['DOCUMENT_ROOT'] . '/wp-load.php',
+];
+
+foreach ($possible_paths as $path) {
+    if (file_exists($path)) {
+        @require_once $path;
+        if (function_exists('home_url')) {
+            $wp_loaded = true;
+            break;
+        }
+    }
+}
+
+// URL de la API
+$api_url = $wp_loaded ? home_url('/wp-json/giftia/v1/ingest') : 'https://giftia.es/wp-json/giftia/v1/ingest';
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -63,10 +85,12 @@ header('Content-Type: text/html; charset=UTF-8');
                 
                 $json_data = json_encode($product);
                 
-                // Send to API
+                // Send to API (usando variable global $api_url)
+                global $api_url;
+                
                 $ch = curl_init();
                 curl_setopt_array($ch, [
-                    CURLOPT_URL => 'https://giftia.es/wp-content/plugins/giftfinder-core/api-ingest.php',
+                    CURLOPT_URL => $api_url,
                     CURLOPT_POST => true,
                     CURLOPT_POSTFIELDS => $json_data,
                     CURLOPT_HTTPHEADER => [
@@ -167,7 +191,7 @@ header('Content-Type: text/html; charset=UTF-8');
         
         <hr>
         <p style="font-size: 12px; color: #666;">
-            URL de la API: <code>https://giftia.es/wp-content/plugins/giftfinder-core/api-ingest.php</code>
+            URL de la API: <code><?php echo esc_html($api_url); ?></code>
         </p>
     </div>
 </body>

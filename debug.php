@@ -109,7 +109,7 @@ try {
     
     // Fallback a wp_options
     if (!$wp_token) {
-        $wp_token = get_option('gf_ingest_secret_token', false);
+        $wp_token = get_option('gf_wp_api_token', false);
     }
     if (!$gemini_key) {
         $gemini_key = get_option('gf_gemini_api_key', false);

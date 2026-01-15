@@ -55,10 +55,35 @@ function gf_create_custom_tables() {
     dbDelta( $sql_offers );
 
     // Guardar versión de BD
-    update_option( 'gf_db_version', '6.1' );
+    update_option( 'gf_db_version', '6.2' );
+    
+    // Migrar token antiguo si existe
+    gf_migrate_legacy_token();
     
     // Log
     error_log( '[GIFTIA] Tablas de base de datos creadas/verificadas' );
+}
+
+/**
+ * Migra tokens del nombre antiguo al nuevo para consistencia
+ * gf_ingest_secret_token → gf_wp_api_token
+ */
+function gf_migrate_legacy_token() {
+    $old_token = get_option( 'gf_ingest_secret_token', '' );
+    $new_token = get_option( 'gf_wp_api_token', '' );
+    
+    // Si existe token antiguo pero no nuevo, migrar
+    if ( !empty( $old_token ) && empty( $new_token ) ) {
+        update_option( 'gf_wp_api_token', $old_token );
+        error_log( '[GIFTIA] Token migrado de gf_ingest_secret_token a gf_wp_api_token' );
+    }
+    
+    // Si no hay ningún token, generar uno nuevo
+    if ( empty( $old_token ) && empty( $new_token ) ) {
+        $generated_token = bin2hex( random_bytes( 16 ) );
+        update_option( 'gf_wp_api_token', $generated_token );
+        error_log( '[GIFTIA] Token generado automáticamente: ' . substr( $generated_token, 0, 10 ) . '...' );
+    }
 }
 
 // Ejecutar on activation
@@ -70,6 +95,13 @@ add_action( 'plugins_loaded', function() {
     $table_ai = $wpdb->prefix . 'gf_products_ai';
     if ( $wpdb->get_var( "SHOW TABLES LIKE '$table_ai'" ) !== $table_ai ) {
         gf_create_custom_tables();
+    }
+    
+    // Siempre intentar migrar token (una vez por carga)
+    static $migrated = false;
+    if ( !$migrated ) {
+        gf_migrate_legacy_token();
+        $migrated = true;
     }
 }, 1 );
 
