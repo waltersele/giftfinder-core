@@ -30,8 +30,9 @@ if ( file_exists( plugin_dir_path( __FILE__ ) . 'admin-settings.php' ) ) {
     require_once plugin_dir_path( __FILE__ ) . 'admin-settings.php';
 }
 
-if ( file_exists( plugin_dir_path( __FILE__ ) . 'frontend-ui.php' ) ) {
-    require_once plugin_dir_path( __FILE__ ) . 'frontend-ui.php';
+// v4: JavaScript externo para evitar errores de sintaxis
+if ( file_exists( plugin_dir_path( __FILE__ ) . 'frontend-ui-v4.php' ) ) {
+    require_once plugin_dir_path( __FILE__ ) . 'frontend-ui-v4.php';
 }
 
 // --- 2. REST API ENDPOINT PARA HUNTER ---
@@ -43,16 +44,46 @@ function gf_register_rest_routes_early() {
 }
 
 function gf_register_rest_ingest_endpoint() {
+    // Endpoint de ingesta para Hunter
     register_rest_route( 'giftia/v1', '/ingest', [
         'methods' => ['POST', 'OPTIONS'],
         'callback' => 'gf_handle_ingest_request',
-        'permission_callback' => '__return_true',  // Manejamos permisos en la callback
+        'permission_callback' => '__return_true',
         'args' => [
             'asin' => ['required' => true, 'type' => 'string'],
             'title' => ['required' => true, 'type' => 'string'],
             'price' => ['required' => true, 'type' => 'string'],
         ]
     ]);
+    
+    // Endpoint de recomendación con Avatar AI
+    register_rest_route( 'giftia/v1', '/recommend', [
+        'methods' => ['POST', 'OPTIONS'],
+        'callback' => 'gf_handle_recommend_request',
+        'permission_callback' => '__return_true',
+    ]);
+}
+
+/**
+ * Manejar petición de recomendación con Avatar AI
+ */
+function gf_handle_recommend_request( WP_REST_Request $request ) {
+    // Incluir el archivo de recomendación
+    $recommend_file = plugin_dir_path( __FILE__ ) . 'api-recommend.php';
+    
+    if ( file_exists( $recommend_file ) ) {
+        // Pasar datos al script
+        $_POST = $request->get_json_params();
+        
+        ob_start();
+        include $recommend_file;
+        $output = ob_get_clean();
+        
+        $data = json_decode( $output, true );
+        return rest_ensure_response( $data );
+    }
+    
+    return new WP_Error( 'not_found', 'API de recomendación no disponible', ['status' => 404] );
 }
 
 function gf_handle_ingest_request( WP_REST_Request $request ) {

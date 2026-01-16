@@ -267,6 +267,15 @@ foreach ($recips as $r) {
     wp_set_object_terms($post_id, $r, 'gf_recipient', true);
 }
 
+// === CLASIFICAR RESTRICCIÓN DE EDAD ===
+if (function_exists('gf_classify_age_restriction')) {
+    $age_restriction = gf_classify_age_restriction($title_clean, $price);
+    if ($age_restriction) {
+        update_post_meta($post_id, '_gf_age_restriction', $age_restriction);
+        error_log('[GIFTIA-API] Restricción de edad: ' . $age_restriction . ' para post ' . $post_id);
+    }
+}
+
 // === GENERAR CONTENIDO IA (Con fallback) ===
 $post_obj = get_post($post_id);
 

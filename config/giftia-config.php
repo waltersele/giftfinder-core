@@ -313,6 +313,65 @@ function gf_classify_recipient($title) {
     return $recips;
 }
 
+// ============================================================
+// FUNCIÓN: Clasificar restricción de edad del producto
+// Retorna: 'alcohol', 'adult', 'kids', o null (sin restricción)
+// ============================================================
+
+function gf_classify_age_restriction($title, $price = 0) {
+    $title_lower = strtolower($title);
+    
+    // ALCOHOL - Requiere 18+
+    $alcohol_keywords = [
+        'whisky', 'whiskey', 'bourbon', 'scotch', 'single malt',
+        'gin', 'ginebra', 'vodka', 'ron ', 'rum ', 'tequila', 'mezcal',
+        'cerveza', 'beer', 'vino', 'wine', 'champagne', 'cava', 'prosecco',
+        'licor', 'brandy', 'cognac', 'armagnac', 'sake', 'soju',
+        'vermut', 'vermouth', 'aperitivo', 'aperol', 'campari',
+        'absenta', 'orujo', 'grappa', 'pisco', 'cachaza',
+        'destilado', 'fermentado', 'graduación alcohólica',
+        'añejo', 'reserva', 'gran reserva', 'bodega', 'viñedo',
+        'coctelería', 'cocktail', 'mixología', 'bartender'
+    ];
+    
+    foreach($alcohol_keywords as $kw) {
+        if(strpos($title_lower, $kw) !== false) {
+            return 'alcohol';
+        }
+    }
+    
+    // ADULT - Contenido para adultos (no sexual, pero no apropiado para niños)
+    $adult_keywords = [
+        'cuchillo profesional', 'navaja', 'katana', 'espada',
+        'arma', 'pistola', 'rifle', 'escopeta',
+        'tabaco', 'cigarro', 'pipa fumar', 'mechero zippo',
+        'tatuaje', 'piercing', 'body mod'
+    ];
+    
+    foreach($adult_keywords as $kw) {
+        if(strpos($title_lower, $kw) !== false) {
+            return 'adult';
+        }
+    }
+    
+    // KIDS - Específico para niños (opcional, para filtrar en búsquedas de adultos)
+    $kids_keywords = [
+        'infantil', 'bebé', 'bebe', 'baby', 'niño', 'niña',
+        'juguete', 'peluche', 'muñeca', 'muñeco',
+        'pañal', 'biberón', 'chupete', 'sonajero',
+        'cuna', 'trona', 'cochecito'
+    ];
+    
+    foreach($kids_keywords as $kw) {
+        if(strpos($title_lower, $kw) !== false) {
+            return 'kids';
+        }
+    }
+    
+    // Sin restricción específica
+    return null;
+}
+
 // Permitir a otros plugins modificar vibes
 $GIFTIA_VIBES = apply_filters('gf_vibes_list', $GIFTIA_VIBES);
 $GIFTIA_RECIPIENTS = apply_filters('gf_recipients_list', $GIFTIA_RECIPIENTS);
