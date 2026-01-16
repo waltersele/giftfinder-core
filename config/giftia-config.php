@@ -18,48 +18,57 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 // Frontend usa SLUG, Backend usa NAME para BD
 // Esto evita duplicación y facilita agregar nuevos vibes sin tocar código
 
+// ============================================================================
+// 6 VIBES SIMPLIFICADOS + DIGITAL - Sincronizados con Hunter y Frontend
+// ============================================================================
 $GIFTIA_VIBES = [
+    [
+        'slug'     => 'digital',
+        'name'     => 'Digital',
+        'icon'     => 'fa-bolt',
+        'keywords' => 'tarjeta regalo|gift card|código|codigo|ebook|kindle|suscripción|suscripcion|netflix|spotify|steam|playstation store|xbox|nintendo eshop|google play|itunes|audible|kindle unlimited|amazon prime|disney|hbo|curso online|masterclass|udemy|domestika|licencia|software|descarga digital',
+    ],
     [
         'slug'     => 'tech',
         'name'     => 'Tech',
         'icon'     => 'fa-microchip',
-        'keywords' => 'bluetooth|wifi|usb|gamer|inalambrico|smart|inteligente|movil|auriculares|teclado|drone|consola|kindle|altavoz|proyector|camara|instax',
+        'keywords' => 'bluetooth|wifi|usb|gamer|gaming|inalambrico|smart|inteligente|movil|auriculares|teclado|drone|consola|kindle|altavoz|proyector|camara|instax|playstation|xbox|nintendo|pc|ordenador|portatil|alexa|google home|smartwatch|airpods|realidad virtual|retro',
     ],
     [
         'slug'     => 'gourmet',
         'name'     => 'Gourmet',
         'icon'     => 'fa-utensils',
-        'keywords' => 'sarten|cuchillo|vino|cerveza|gourmet|sushi|recetas|cocina|coctel|cafe|cafetera|hamburguesa|pizza|air fryer|freidora',
-    ],
-    [
-        'slug'     => 'friki',
-        'name'     => 'Friki',
-        'icon'     => 'fa-jedi',
-        'keywords' => 'lego|star wars|marvel|harry potter|pop|juego mesa|zelda|mario|anillos|arcade|pokemon|disney|mandalorian|funko',
+        'keywords' => 'sarten|cuchillo|vino|cerveza|gourmet|sushi|recetas|cocina|coctel|cafe|cafetera|hamburguesa|pizza|air fryer|freidora|whisky|gin|vermouth|cata|sommelier|chef|delicatessen|aceite oliva|jamon iberico|chocolate|trufa|bbq|ahumador|thermomix',
     ],
     [
         'slug'     => 'zen',
         'name'     => 'Zen',
         'icon'     => 'fa-spa',
-        'keywords' => 'yoga|masaje|relajante|vela|aroma|baño|spa|zen|bonsai|terrario|luna|estrellas',
+        'keywords' => 'yoga|masaje|relajante|vela|aroma|baño|spa|zen|bonsai|terrario|luna|estrellas|meditacion|mindfulness|cuenco tibetano|incienso|aromaterapia|difusor|aceites esenciales|pilates|masajeador|gua sha|jade|relax|descanso|dormir|sueño|almohada|albornoz|weighted blanket',
     ],
     [
         'slug'     => 'viajes',
         'name'     => 'Viajes',
         'icon'     => 'fa-plane',
-        'keywords' => 'viaje|mapa|mochila|brujula|mundo|rascar|avion|maleta',
+        'keywords' => 'viaje|mapa|mochila|brujula|mundo|rascar|avion|maleta|camping|tienda|saco dormir|linterna|hamaca|trekking|senderismo|outdoor|aventura|escalada|montaña|navaja|victorinox|filtro agua|powerbank|kindle|traductor|snorkel|acuatico',
     ],
     [
         'slug'     => 'deporte',
         'name'     => 'Deporte',
         'icon'     => 'fa-dumbbell',
-        'keywords' => 'deporte|pesas|gym|botella|fitness|entrenamiento|running',
+        'keywords' => 'deporte|pesas|gym|botella|fitness|entrenamiento|running|bicicleta|ciclismo|natacion|padel|tenis|raqueta|mancuerna|kettlebell|trx|foam roller|garmin|electroestimulador|recuperacion|compresion|trail|hidratacion',
     ],
     [
         'slug'     => 'moda',
         'name'     => 'Moda',
         'icon'     => 'fa-gem',
-        'keywords' => 'moda|bolso|joya|colgante|pulsera|reloj|cartera',
+        'keywords' => 'moda|bolso|joya|colgante|pulsera|reloj|cartera|gafas sol|ray-ban|perfume|colonia|fragancia|piel|cuero|cashmere|seda|elegante|diseño|decoracion|cuadro|lampara|jarron|hogar|textil',
+    ],
+    [
+        'slug'     => 'friki',
+        'name'     => 'Friki',
+        'icon'     => 'fa-jedi',
+        'keywords' => 'lego|star wars|marvel|harry potter|pop|funko|juego mesa|zelda|mario|anillos|arcade|pokemon|disney|mandalorian|anime|manga|dragon ball|one piece|naruto|demon slayer|coleccion|figura|sable luz|varita|catan|dungeons|magic|cartas|playmobil|peluche|squishmallow|niños|infantil|juguete|stem',
     ],
 ];
 
@@ -67,13 +76,15 @@ $GIFTIA_VIBES = [
 // TABLA CENTRALIZADA DE RECIPIENTS (PERFILES)
 // ============================================================
 
+// ============================================================================
+// 5 PERFILES DE DESTINATARIO - Simplificados
+// ============================================================================
 $GIFTIA_RECIPIENTS = [
-    ['slug' => 'pareja',      'name' => 'Pareja',       'icon' => 'fa-heart'],
-    ['slug' => 'familia',     'name' => 'Familia',      'icon' => 'fa-house-user'],
-    ['slug' => 'amigos',      'name' => 'Amigos',       'icon' => 'fa-users'],
-    ['slug' => 'peques',      'name' => 'Peques',       'icon' => 'fa-child-reaching'],
-    ['slug' => 'compromiso',  'name' => 'Compromiso',   'icon' => 'fa-handshake'],
-    ['slug' => 'friki',       'name' => 'Para Mí',      'icon' => 'fa-user-astronaut'],
+    ['slug' => 'pareja',  'name' => 'Mi pareja',  'icon' => 'fa-heart'],
+    ['slug' => 'familia', 'name' => 'Familiar',   'icon' => 'fa-house-user'],
+    ['slug' => 'amigos',  'name' => 'Amig@',      'icon' => 'fa-users'],
+    ['slug' => 'peques',  'name' => 'Niñ@',       'icon' => 'fa-child-reaching'],
+    ['slug' => 'yo',      'name' => 'Para mí',    'icon' => 'fa-user-astronaut'],
 ];
 
 // ============================================================
@@ -270,31 +281,33 @@ function gf_get_config($key, $default = null) {
 // FILTROS WORDPRESS (Para que el sistema sea pluggable)
 // ============================================================
 
-// ============================================================
+// ============================================================================
 // FUNCIÓN: Clasificar recipient por keywords
-// ============================================================
+// ============================================================================
 
 function gf_classify_recipient($title) {
     $title_lower = strtolower($title);
     $recips = [];
     
-    if(preg_match('/(mujer|ella|novia|esposa|madre|mama|señora|dama|chica|femenino)/', $title_lower)) {
-        $recips[] = 'Novia';
-        $recips[] = 'Madre';
+    // Niños - prioridad alta (si detecta infantil, asigna solo eso)
+    if(preg_match('/(niño|niña|infantil|juguete|lego|playmobil|peluche|bebé|bebe|kids|junior|escolar)/', $title_lower)) {
+        return ['Niñ@'];
     }
     
-    if(preg_match('/(hombre|el|novio|esposo|padre|papa|señor|caballero|chico|masculino)/', $title_lower)) {
-        $recips[] = 'Novio';
-        $recips[] = 'Padre';
+    // Pareja / Romántico
+    if(preg_match('/(romantico|pareja|amor|aniversario|san valentin|compromiso|boda)/', $title_lower)) {
+        $recips[] = 'Mi pareja';
     }
     
-    if(preg_match('/(niño|niña|infantil|juguete|lego|consola|peluche|bebé|bebe)/', $title_lower)) {
-        $recips[] = 'Peques';
+    // Familiar (sin género específico)
+    if(preg_match('/(familia|hogar|casa|padre|madre|abuelo|abuela)/', $title_lower)) {
+        $recips[] = 'Familiar';
     }
     
+    // Si no encaja en nada específico, es versátil (amigo o para mí)
     if(empty($recips)) {
-        $recips[] = 'Amigos';
-        $recips[] = 'Pareja';
+        $recips[] = 'Amig@';
+        $recips[] = 'Para mí';
     }
     
     return $recips;
